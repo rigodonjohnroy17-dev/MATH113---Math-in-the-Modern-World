@@ -192,12 +192,25 @@
       margin-top: 1.5rem;
     }
 
-    /* Progress bar */
+    /* Sticky progress bar section */
+    .progress-sticky {
+      position: sticky;
+      top: 72px; /* sits below the header */
+      z-index: 90;
+      background: rgba(240, 244, 255, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 0.75rem 0 0.5rem;
+      margin: 0 -1.5rem 1rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      border-bottom: 1px solid rgba(0, 48, 135, 0.08);
+    }
+
     .progress-container {
       background: #e2e8f0;
       border-radius: 999px;
       height: 10px;
-      margin: 1rem 0 1.5rem;
+      margin: 0 0 0.6rem;
       overflow: hidden;
     }
 
@@ -207,6 +220,12 @@
       border-radius: 999px;
       transition: width 0.4s ease;
       width: 0%;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     /* Object selection cards */
@@ -451,6 +470,12 @@
       .card {
         padding: 1.25rem;
       }
+      .progress-sticky {
+        top: 110px; /* taller header on mobile */
+        margin: 0 -1rem 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
     }
 
     /* Utility */
@@ -479,13 +504,15 @@
   </header>
 
   <div class="container">
-    <!-- Progress -->
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-      <span id="sectionLabel" style="font-size:0.9rem; color:var(--text-muted);">Welcome</span>
-      <div class="score-badge">Score: <span id="liveScore">0</span></div>
+    <!-- Sticky Progress + Score -->
+    <div class="progress-sticky">
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-info">
+        <span id="sectionLabel" style="font-size:0.9rem; color:var(--text-muted);">Welcome</span>
+        <div class="score-badge">Score: <span id="liveScore">0</span></div>
+      </div>
     </div>
 
     <!-- ========== SCREEN 0: WELCOME ========== -->
