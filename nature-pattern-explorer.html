@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nature Pattern Explorer | MATH113</title>
+  <style>
+    :root {
+      --primary-blue: #003087;
+      --primary-blue-dark: #001f5c;
+      --accent-yellow: #FFD700;
+      --accent-yellow-soft: #FFE566;
+      --light-blue: #e8f0fe;
+      --white: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-muted: #4a5568;
+      --success: #28a745;
+      --danger: #dc3545;
+      --card-shadow: 0 4px 20px rgba(0, 48, 135, 0.12);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 50%, #f8fafc 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .app-header {
+      background: var(--primary-blue);
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-yellow);
+      object-fit: cover;
+      background: white;
+    }
+
+    .header-text h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .header-text p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .header-text .prepared {
+      font-size: 0.78rem;
+      color: var(--accent-yellow);
+      margin-top: 4px;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(0, 48, 135, 0.08);
+    }
+
+    .card h2 {
+      color: var(--primary-blue);
+      font-size: 1.45rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card h3 {
+      color: var(--primary-blue);
+      font-size: 1.15rem;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    .card p, .card li {
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .card ul {
+      padding-left: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.4rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-blue-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-yellow {
+      background: var(--accent-yellow);
+      color: var(--primary-blue-dark);
+    }
+
+    .btn-yellow:hover {
+      background: var(--accent-yellow-soft);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary-blue);
+      color: var(--primary-blue);
+    }
+
+    .btn-outline:hover {
+      background: var(--light-blue);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 10px;
+      margin: 1rem 0 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-blue), var(--accent-yellow));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Object selection cards */
+    .object-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .object-card {
+      background: var(--light-blue);
+      border: 2px solid transparent;
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .object-card:hover, .object-card.selected {
+      border-color: var(--primary-blue);
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,48,135,0.15);
+      transform: translateY(-2px);
+    }
+
+    .object-card .emoji {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .object-card h4 {
+      color: var(--primary-blue);
+      font-size: 1rem;
+    }
+
+    /* Challenge box */
+    .challenge-box {
+      background: linear-gradient(135deg, #f8fafc, var(--light-blue));
+      border-left: 5px solid var(--accent-yellow);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .challenge-box .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Input & feedback */
+    .answer-input {
+      width: 100%;
+      max-width: 280px;
+      padding: 0.7rem 1rem;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      margin: 0.75rem 0;
+      transition: border-color 0.2s;
+    }
+
+    .answer-input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+    }
+
+    .feedback {
+      padding: 0.9rem 1.1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    .feedback.correct {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+
+    .feedback.incorrect {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+
+    /* Options (multiple choice) */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 0.85rem 1.1rem;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.15s;
+    }
+
+    .option-btn:hover {
+      border-color: var(--primary-blue);
+      background: var(--light-blue);
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary-blue);
+      background: var(--light-blue);
+      font-weight: 600;
+    }
+
+    .option-btn.correct {
+      border-color: var(--success);
+      background: #d4edda;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--danger);
+      background: #f8d7da;
+    }
+
+    /* Sequence display */
+    .sequence {
+      font-family: 'Courier New', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      letter-spacing: 2px;
+      background: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      display: inline-block;
+      margin: 0.5rem 0;
+      border: 2px dashed var(--primary-blue);
+    }
+
+    /* Score badge */
+    .score-badge {
+      background: var(--primary-blue);
+      color: white;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .score-badge span {
+      color: var(--accent-yellow);
+    }
+
+    /* Final score screen */
+    .final-score-box {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .final-score-box .big-score {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--primary-blue);
+      margin: 1rem 0;
+    }
+
+    .final-score-box .percentage {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .result-format {
+      background: var(--light-blue);
+      border: 2px solid var(--primary-blue);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+
+    /* Navigation dots */
+    .nav-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-dot.active {
+      background: var(--primary-blue);
+      transform: scale(1.2);
+    }
+
+    .nav-dot.completed {
+      background: var(--accent-yellow);
+    }
+
+    /* Plant growth visual */
+    .plant-visual {
+      text-align: center;
+      font-size: 4rem;
+      margin: 1rem 0;
+      transition: all 0.5s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .app-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+      .header-text h1 {
+        font-size: 1.15rem;
+      }
+      .container {
+        padding: 1rem;
+      }
+      .card {
+        padding: 1.25rem;
+      }
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .highlight {
+      background: linear-gradient(120deg, var(--accent-yellow-soft) 0%, transparent 100%);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtY_KW8qRi08EmxFFDb3jF84RtIV4PVJnHSmLvTQYAq5Ml9nWoqNxfxnQ&s=10" 
+         alt="CITE Logo" class="logo" onerror="this.style.display='none'">
+    <div class="header-text">
+      <h1>Nature Pattern Explorer</h1>
+      <p>Mathematics in Nature • MATH113</p>
+      <p class="prepared">Prepared by John Roy Rigodon — MATH113 Instructor</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Progress -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <span id="sectionLabel" style="font-size:0.9rem; color:var(--text-muted);">Welcome</span>
+      <div class="score-badge">Score: <span id="liveScore">0</span></div>
+    </div>
+
+    <!-- ========== SCREEN 0: WELCOME ========== -->
+    <div class="screen active" id="screen-0">
+      <div class="card">
+        <h2>🌿 Welcome, Pattern Investigators!</h2>
+        <p>In this interactive module you will explore how mathematical patterns appear in the natural world — from the arrangement of seeds in a sunflower to the growth of leaves and the symmetry of a butterfly’s wings.</p>
+        <p>You will observe, identify rules, complete sequences, and apply your understanding. This is designed for college-level students in the 3-Year Diploma Program.</p>
+        <div class="challenge-box">
+          <div class="label">What you will do</div>
+          <ul>
+            <li>Investigate natural objects and the mathematics behind them</li>
+            <li>Master arithmetic, geometric, harmonic, and Fibonacci sequences</li>
+            <li>Compare sequence types and see engineering applications</li>
+            <li>Complete quick checks and a 30-item final assessment</li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="goTo(1)">Start Exploring →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 1: LEARNING OBJECTIVES ========== -->
+    <div class="screen" id="screen-1">
+      <div class="card">
+        <h2>🎯 Learning Objectives</h2>
+        <p>By the end of this module, you should be able to:</p>
+        <ul>
+          <li>Distinguish different types of numbers and recognize patterns in sets of data</li>
+          <li>Define and generate arithmetic, geometric, harmonic, and Fibonacci sequences</li>
+          <li>Determine the common difference, common ratio, or recursive rule of a sequence</li>
+          <li>Predict subsequent terms and explain the mathematical rule in your own words</li>
+          <li>Identify symmetry (bilateral and radial) in natural forms</li>
+          <li>Connect sequence concepts to real-world engineering and technological applications</li>
+          <li>Solve intermediate-level problems involving sequences with accuracy</li>
+        </ul>
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(0)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(2)">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 2: NUMBERS & TYPES ========== -->
+    <div class="screen" id="screen-2">
+      <div class="card">
+        <h2>🔢 Numbers & Number Types</h2>
+        <p>Mathematics begins with numbers. In nature and in technology we constantly encounter different kinds of numbers.</p>
+        
+        <h3>Key Number Types (College Review)</h3>
+        <ul>
+          <li><strong>Natural numbers</strong> (ℕ): 1, 2, 3, … — counting objects</li>
+          <li><strong>Whole numbers</strong>: 0, 1, 2, 3, …</li>
+          <li><strong>Integers</strong> (ℤ): …, −2, −1, 0, 1, 2, …</li>
+          <li><strong>Rational numbers</strong> (ℚ): fractions and terminating/repeating decimals (e.g., 3/4, 0.333…)</li>
+          <li><strong>Irrational numbers</strong>: non-repeating, non-terminating (√2, π, φ ≈ 1.618…)</li>
+          <li><strong>Real numbers</strong> (ℝ): all rational + irrational</li>
+        </ul>
+
+        <div class="challenge-box">
+          <div class="label">Quick Check 1</div>
+          <p>Which of the following numbers is <em>irrational</em>?</p>
+          <div class="options" id="qc1-options">
+            <button class="option-btn" onclick="checkQC(1, this, false)">A) 22/7</button>
+            <button class="option-btn" onclick="checkQC(1, this, false)">B) 0.125</button>
+            <button class="option-btn" onclick="checkQC(1, this, true)">C) √5</button>
+            <button class="option-btn" onclick="checkQC(1, this, false)">D) −8</button>
+          </div>
+          <div class="feedback" id="qc1-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(1)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(3)">Continue to Patterns →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 3: PATTERNS ========== -->
+    <div class="screen" id="screen-3">
+      <div class="card">
+        <h2>🔍 Patterns in Nature</h2>
+        <p>A <strong>pattern</strong> is a regular, repeated arrangement of numbers, shapes, colors, or other elements that follows a rule. Nature is rich with patterns that can be modeled mathematically.</p>
+        
+        <h3>Common Natural Patterns</h3>
+        <ul>
+          <li><strong>Symmetry</strong> — bilateral (butterfly) or radial (flower)</li>
+          <li><strong>Spirals</strong> — sunflower seed heads, pinecones, nautilus shells</li>
+          <li><strong>Branching</strong> — trees, rivers, blood vessels</li>
+          <li><strong>Numerical sequences</strong> — leaf arrangements (phyllotaxis), population growth models</li>
+        </ul>
+
+        <p>Important teaching note: Natural objects are <em>models</em> of mathematical patterns. Not every sunflower follows a perfect Fibonacci arrangement, but the ideal model helps us understand the underlying mathematics.</p>
+
+        <div class="object-grid">
+          <div class="object-card" onclick="selectObject(this, 'sunflower')">
+            <div class="emoji">🌻</div>
+            <h4>Sunflower</h4>
+          </div>
+          <div class="object-card" onclick="selectObject(this, 'butterfly')">
+            <div class="emoji">🦋</div>
+            <h4>Butterfly</h4>
+          </div>
+          <div class="object-card" onclick="selectObject(this, 'pinecone')">
+            <div class="emoji">🌲</div>
+            <h4>Pinecone</h4>
+          </div>
+          <div class="object-card" onclick="selectObject(this, 'flower')">
+            <div class="emoji">🌸</div>
+            <h4>Flower</h4>
+          </div>
+        </div>
+        <p id="object-info" class="text-center" style="min-height:1.5em; color:var(--primary-blue); font-weight:600;"></p>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(2)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(4)">Continue to Sequences →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 4: SEQUENCES INTRO ========== -->
+    <div class="screen" id="screen-4">
+      <div class="card">
+        <h2>📐 Introduction to Sequences</h2>
+        <p>A <strong>sequence</strong> is an ordered list of numbers that follows a definite rule. Each number in the sequence is called a <em>term</em>.</p>
+        
+        <p>We write a sequence as: <span class="sequence">a₁, a₂, a₃, …, aₙ</span></p>
+
+        <h3>Four Important Sequences in this Module</h3>
+        <ul>
+          <li><strong>Arithmetic Sequence</strong> — constant difference between consecutive terms</li>
+          <li><strong>Geometric Sequence</strong> — constant ratio between consecutive terms</li>
+          <li><strong>Harmonic Sequence</strong> — reciprocals of an arithmetic sequence</li>
+          <li><strong>Fibonacci Sequence</strong> — each term is the sum of the two preceding terms</li>
+        </ul>
+
+        <div class="challenge-box">
+          <div class="label">Quick Check 2</div>
+          <p>The sequence 5, 8, 11, 14, 17, … is best classified as:</p>
+          <div class="options" id="qc2-options">
+            <button class="option-btn" onclick="checkQC(2, this, true)">A) Arithmetic</button>
+            <button class="option-btn" onclick="checkQC(2, this, false)">B) Geometric</button>
+            <button class="option-btn" onclick="checkQC(2, this, false)">C) Harmonic</button>
+            <button class="option-btn" onclick="checkQC(2, this, false)">D) Fibonacci</button>
+          </div>
+          <div class="feedback" id="qc2-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(3)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(5)">Arithmetic Sequence →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 5: ARITHMETIC ========== -->
+    <div class="screen" id="screen-5">
+      <div class="card">
+        <h2>➕ Arithmetic Sequence</h2>
+        <p>An <strong>arithmetic sequence</strong> has a constant difference <em>d</em> between consecutive terms. This difference is called the <strong>common difference</strong>.</p>
+        
+        <p><strong>General term:</strong> <span class="sequence">aₙ = a₁ + (n − 1)d</span></p>
+
+        <h3>Example from Nature</h3>
+        <p>A simplified model of a plant’s branch lengths (in cm) follows:</p>
+        <p class="sequence">3, 7, 11, 15, 19, …</p>
+        <p>Common difference <em>d</em> = 4. The next term is 19 + 4 = 23.</p>
+
+        <div class="challenge-box">
+          <div class="label">Challenge — Arithmetic</div>
+          <p>A virtual tree’s ring thickness increases according to the sequence:</p>
+          <p class="sequence">2.5, 4.0, 5.5, 7.0, ___</p>
+          <p>What is the next term? (Enter the number only)</p>
+          <input type="number" step="0.1" class="answer-input" id="arith-input" placeholder="e.g. 8.5">
+          <br>
+          <button class="btn btn-yellow" onclick="checkArith()">Check Answer</button>
+          <div class="feedback" id="arith-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(4)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(6)">Geometric Sequence →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 6: GEOMETRIC ========== -->
+    <div class="screen" id="screen-6">
+      <div class="card">
+        <h2>✖️ Geometric Sequence</h2>
+        <p>A <strong>geometric sequence</strong> has a constant ratio <em>r</em> between consecutive terms. This is the <strong>common ratio</strong>.</p>
+        
+        <p><strong>General term:</strong> <span class="sequence">aₙ = a₁ · r<sup>(n−1)</sup></span></p>
+
+        <h3>Example</h3>
+        <p>Bacterial colony size (simplified) doubles every generation:</p>
+        <p class="sequence">4, 8, 16, 32, 64, …</p>
+        <p>Common ratio <em>r</em> = 2.</p>
+
+        <div class="challenge-box">
+          <div class="label">Challenge — Geometric</div>
+          <p>A population model follows the sequence:</p>
+          <p class="sequence">5, 15, 45, 135, ___</p>
+          <p>Find the next term.</p>
+          <input type="number" class="answer-input" id="geo-input" placeholder="Enter number">
+          <br>
+          <button class="btn btn-yellow" onclick="checkGeo()">Check Answer</button>
+          <div class="feedback" id="geo-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(5)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(7)">Harmonic Sequence →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 7: HARMONIC ========== -->
+    <div class="screen" id="screen-7">
+      <div class="card">
+        <h2>➗ Harmonic Sequence</h2>
+        <p>A <strong>harmonic sequence</strong> is formed by taking the reciprocals of the terms of an arithmetic sequence.</p>
+        
+        <p>If <span class="sequence">a, a+d, a+2d, …</span> is arithmetic, then</p>
+        <p class="sequence">1/a , 1/(a+d) , 1/(a+2d) , …</p>
+        <p>is harmonic.</p>
+
+        <h3>Classic Example</h3>
+        <p class="sequence">1, 1/2, 1/3, 1/4, 1/5, …</p>
+        <p>This is the harmonic sequence corresponding to the arithmetic sequence 1, 2, 3, 4, 5, …</p>
+
+        <div class="challenge-box">
+          <div class="label">Challenge — Harmonic</div>
+          <p>Which of the following is a harmonic sequence?</p>
+          <div class="options" id="harm-options">
+            <button class="option-btn" onclick="checkHarm(this, false)">A) 2, 4, 6, 8, 10</button>
+            <button class="option-btn" onclick="checkHarm(this, true)">B) 1/3, 1/5, 1/7, 1/9</button>
+            <button class="option-btn" onclick="checkHarm(this, false)">C) 3, 9, 27, 81</button>
+            <button class="option-btn" onclick="checkHarm(this, false)">D) 1, 1, 2, 3, 5</button>
+          </div>
+          <div class="feedback" id="harm-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(6)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(8)">Fibonacci Sequence →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 8: FIBONACCI ========== -->
+    <div class="screen" id="screen-8">
+      <div class="card">
+        <h2>🌻 Fibonacci Sequence & Fibonacci Garden</h2>
+        <p>The <strong>Fibonacci sequence</strong> is defined recursively:</p>
+        <p class="sequence">F₁ = 1, F₂ = 1, Fₙ = Fₙ₋₁ + Fₙ₋₂  for n ≥ 3</p>
+        <p>So the sequence begins: <span class="sequence">1, 1, 2, 3, 5, 8, 13, 21, 34, …</span></p>
+
+        <p>This sequence famously appears in idealized models of phyllotaxis (leaf and seed arrangement), spiral shells, and branching patterns.</p>
+
+        <div class="plant-visual" id="plantVisual">🌱</div>
+        <p class="text-center" id="plantStatus">Your plant is ready to grow. Complete the sequence!</p>
+
+        <div class="challenge-box">
+          <div class="label">Fibonacci Garden Challenge</div>
+          <p>The number of leaves in a simplified plant model follows:</p>
+          <p class="sequence">1, 1, 2, 3, 5, ___, ___</p>
+          <p>Enter the next two numbers (separated by a comma):</p>
+          <input type="text" class="answer-input" id="fib-input" placeholder="e.g. 8, 13">
+          <br>
+          <button class="btn btn-yellow" onclick="checkFib()">Grow the Plant</button>
+          <div class="feedback" id="fib-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(7)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(9)">Compare Sequences →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 9: COMPARING ========== -->
+    <div class="screen" id="screen-9">
+      <div class="card">
+        <h2>📊 Comparing the Four Sequences</h2>
+        
+        <table style="width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.95rem;">
+          <thead>
+            <tr style="background:var(--primary-blue); color:white;">
+              <th style="padding:0.7rem; text-align:left;">Type</th>
+              <th style="padding:0.7rem; text-align:left;">Rule</th>
+              <th style="padding:0.7rem; text-align:left;">Key Feature</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#f8fafc;">
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;"><strong>Arithmetic</strong></td>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;">aₙ = a₁ + (n−1)d</td>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;">Constant difference</td>
+            </tr>
+            <tr>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;"><strong>Geometric</strong></td>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;">aₙ = a₁ · rⁿ⁻¹</td>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;">Constant ratio</td>
+            </tr>
+            <tr style="background:#f8fafc;">
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;"><strong>Harmonic</strong></td>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;">Reciprocals of arithmetic</td>
+              <td style="padding:0.6rem; border-bottom:1px solid #e2e8f0;">Reciprocal differences constant</td>
+            </tr>
+            <tr>
+              <td style="padding:0.6rem;"><strong>Fibonacci</strong></td>
+              <td style="padding:0.6rem;">Fₙ = Fₙ₋₁ + Fₙ₋₂</td>
+              <td style="padding:0.6rem;">Sum of two previous</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="challenge-box">
+          <div class="label">Quick Check 3</div>
+          <p>Which sequence has a constant <em>ratio</em> between consecutive terms?</p>
+          <div class="options" id="qc3-options">
+            <button class="option-btn" onclick="checkQC(3, this, false)">A) Arithmetic</button>
+            <button class="option-btn" onclick="checkQC(3, this, true)">B) Geometric</button>
+            <button class="option-btn" onclick="checkQC(3, this, false)">C) Harmonic</button>
+            <button class="option-btn" onclick="checkQC(3, this, false)">D) Fibonacci</button>
+          </div>
+          <div class="feedback" id="qc3-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(8)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(10)">Applications →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 10: APPLICATIONS ========== -->
+    <div class="screen" id="screen-10">
+      <div class="card">
+        <h2>⚙️ Engineering & Technology Applications</h2>
+        <p>Sequences are not just abstract; they appear throughout engineering and technology:</p>
+        
+        <ul>
+          <li><strong>Arithmetic</strong> — linear depreciation of equipment, uniform sampling intervals, stepped voltage levels</li>
+          <li><strong>Geometric</strong> — compound interest / growth models, signal attenuation, recursive filters, population dynamics in systems</li>
+          <li><strong>Harmonic</strong> — analysis of resistors in parallel, certain wave phenomena, musical intervals</li>
+          <li><strong>Fibonacci / Golden Ratio</strong> — efficient packing algorithms, antenna design, architectural proportions, computer science (Fibonacci heaps, search algorithms)</li>
+        </ul>
+
+        <div class="challenge-box">
+          <div class="label">Application Question</div>
+          <p>In digital signal processing, a geometric sequence is often used to model:</p>
+          <div class="options" id="app-options">
+            <button class="option-btn" onclick="checkApp(this, false)">A) Constant sampling intervals</button>
+            <button class="option-btn" onclick="checkApp(this, true)">B) Exponential decay or growth of a signal</button>
+            <button class="option-btn" onclick="checkApp(this, false)">C) Linear increase in voltage steps</button>
+            <button class="option-btn" onclick="checkApp(this, false)">D) Reciprocal relationships only</button>
+          </div>
+          <div class="feedback" id="app-feedback"></div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-outline" onclick="goTo(9)">← Back</button>
+          <button class="btn btn-primary" onclick="goTo(11)">Final Quiz (30 items) →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 11: FINAL QUIZ ========== -->
+    <div class="screen" id="screen-11">
+      <div class="card">
+        <h2>📝 Final Assessment — 30 Items</h2>
+        <p>Each item is worth 1 point. Answer carefully. You may review previous sections before starting.</p>
+        <p><strong>Instructions:</strong> Select the best answer or enter the required value. Click “Submit All Answers” only when finished.</p>
+        
+        <div id="quiz-container">
+          <!-- Questions will be injected by JS -->
+        </div>
+
+        <div class="btn-group" style="margin-top:2rem;">
+          <button class="btn btn-outline" onclick="goTo(10)">← Back to Applications</button>
+          <button class="btn btn-primary" onclick="submitQuiz()">Submit All Answers</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SCREEN 12: RESULTS ========== -->
+    <div class="screen" id="screen-12">
+      <div class="card final-score-box">
+        <h2>🏆 Assessment Complete</h2>
+        <p>Enter your full name for the official record:</p>
+        <input type="text" class="answer-input" id="studentName" placeholder="e.g. Maria Santos" style="max-width:320px; text-align:center;">
+        
+        <div class="big-score" id="finalScoreDisplay">0/30</div>
+        <div class="percentage" id="finalPercent">0%</div>
+
+        <div class="result-format" id="resultString">
+          — /30 (—%)
+        </div>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Copy the line above and submit it to your instructor.</p>
+
+        <div class="btn-group" style="justify-content:center;">
+          <button class="btn btn-yellow" onclick="updateResultString()">Update Name on Result</button>
+          <button class="btn btn-primary" onclick="location.reload()">Restart Module</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end container -->
+
+  <script>
+    // ========== STATE ==========
+    let currentScreen = 0;
+    let totalScore = 0;
+    const totalScreens = 13; // 0 to 12
+    let quizAnswers = {};
+    let qcAnswered = {1:false, 2:false, 3:false};
+    let challengesDone = {arith:false, geo:false, harm:false, fib:false, app:false};
+
+    // ========== NAVIGATION ==========
+    function goTo(n) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + n).classList.add('active');
+      currentScreen = n;
+      updateProgress();
+      window.scrollTo({top:0, behavior:'smooth'});
+
+      if (n === 11) buildQuiz();
+    }
+
+    function updateProgress() {
+      const pct = (currentScreen / (totalScreens - 1)) * 100;
+      document.getElementById('progressBar').style.width = pct + '%';
+      const labels = [
+        'Welcome', 'Learning Objectives', 'Numbers & Types', 'Patterns',
+        'Sequences Intro', 'Arithmetic', 'Geometric', 'Harmonic',
+        'Fibonacci', 'Comparing', 'Applications', 'Final Quiz', 'Results'
+      ];
+      document.getElementById('sectionLabel').textContent = labels[currentScreen] || '';
+      document.getElementById('liveScore').textContent = totalScore;
+    }
+
+    // ========== QUICK CHECKS ==========
+    function checkQC(num, btn, isCorrect) {
+      if (qcAnswered[num]) return;
+      const options = document.getElementById('qc' + num + '-options');
+      const feedback = document.getElementById('qc' + num + '-feedback');
+      options.querySelectorAll('.option-btn').forEach(b => {
+        b.disabled = true;
+        b.style.pointerEvents = 'none';
+      });
+      if (isCorrect) {
+        btn.classList.add('correct');
+        feedback.className = 'feedback correct';
+        feedback.textContent = 'Correct! Well reasoned.';
+        totalScore += 1;
+        updateProgress();
+      } else {
+        btn.classList.add('wrong');
+        feedback.className = 'feedback incorrect';
+        feedback.textContent = 'Not quite. Review the definition and try to identify the key characteristic.';
+        // highlight correct
+        options.querySelectorAll('.option-btn').forEach(b => {
+          if (b.onclick.toString().includes('true')) b.classList.add('correct');
+        });
+      }
+      qcAnswered[num] = true;
+    }
+
+    // ========== CHALLENGES ==========
+    function checkArith() {
+      if (challengesDone.arith) return;
+      const val = parseFloat(document.getElementById('arith-input').value);
+      const fb = document.getElementById('arith-feedback');
+      if (val === 8.5) {
+        fb.className = 'feedback correct';
+        fb.textContent = 'Correct! Common difference d = 1.5, so 7.0 + 1.5 = 8.5.';
+        totalScore += 1;
+        challengesDone.arith = true;
+      } else {
+        fb.className = 'feedback incorrect';
+        fb.textContent = 'Incorrect. Calculate the common difference first (4.0 − 2.5 = 1.5), then add it to the last term.';
+      }
+      updateProgress();
+    }
+
+    function checkGeo() {
+      if (challengesDone.geo) return;
+      const val = parseFloat(document.getElementById('geo-input').value);
+      const fb = document.getElementById('geo-feedback');
+      if (val === 405) {
+        fb.className = 'feedback correct';
+        fb.textContent = 'Correct! Common ratio r = 3, so 135 × 3 = 405.';
+        totalScore += 1;
+        challengesDone.geo = true;
+      } else {
+        fb.className = 'feedback incorrect';
+        fb.textContent = 'Incorrect. Find the common ratio (15/5 = 3) and multiply the last term by it.';
+      }
+      updateProgress();
+    }
+
+    function checkHarm(btn, isCorrect) {
+      if (challengesDone.harm) return;
+      const options = document.getElementById('harm-options');
+      const fb = document.getElementById('harm-feedback');
+      options.querySelectorAll('.option-btn').forEach(b => {
+        b.disabled = true;
+        b.style.pointerEvents = 'none';
+      });
+      if (isCorrect) {
+        btn.classList.add('correct');
+        fb.className = 'feedback correct';
+        fb.textContent = 'Correct! 1/3, 1/5, 1/7, 1/9 are reciprocals of the arithmetic sequence 3, 5, 7, 9.';
+        totalScore += 1;
+        challengesDone.harm = true;
+      } else {
+        btn.classList.add('wrong');
+        fb.className = 'feedback incorrect';
+        fb.textContent = 'Incorrect. A harmonic sequence consists of reciprocals of an arithmetic sequence.';
+        options.querySelectorAll('.option-btn').forEach(b => {
+          if (b.onclick.toString().includes('true')) b.classList.add('correct');
+        });
+      }
+      updateProgress();
+    }
+
+    function checkFib() {
+      if (challengesDone.fib) return;
+      const raw = document.getElementById('fib-input').value.trim().replace(/\s/g, '');
+      const fb = document.getElementById('fib-feedback');
+      const plant = document.getElementById('plantVisual');
+      const status = document.getElementById('plantStatus');
+      if (raw === '8,13' || raw === '8,13,' || raw === '8 13') {
+        fb.className = 'feedback correct';
+        fb.textContent = 'Excellent! 5 + 3 = 8 and 8 + 5 = 13. The plant grows!';
+        plant.textContent = '🌳';
+        status.textContent = 'Your Fibonacci plant has fully grown. Great pattern recognition!';
+        totalScore += 1;
+        challengesDone.fib = true;
+      } else {
+        fb.className = 'feedback incorrect';
+        fb.textContent = 'Not yet. Remember: each term is the sum of the two preceding terms (3+5=8, 5+8=13).';
+      }
+      updateProgress();
+    }
+
+    function checkApp(btn, isCorrect) {
+      if (challengesDone.app) return;
+      const options = document.getElementById('app-options');
+      const fb = document.getElementById('app-feedback');
+      options.querySelectorAll('.option-btn').forEach(b => {
+        b.disabled = true;
+        b.style.pointerEvents = 'none';
+      });
+      if (isCorrect) {
+        btn.classList.add('correct');
+        fb.className = 'feedback correct';
+        fb.textContent = 'Correct. Geometric sequences model exponential growth or decay, common in signal processing.';
+        totalScore += 1;
+        challengesDone.app = true;
+      } else {
+        btn.classList.add('wrong');
+        fb.className = 'feedback incorrect';
+        fb.textContent = 'Incorrect. Geometric sequences are characterized by a constant multiplicative ratio.';
+        options.querySelectorAll('.option-btn').forEach(b => {
+          if (b.onclick.toString().includes('true')) b.classList.add('correct');
+        });
+      }
+      updateProgress();
+    }
+
+    // ========== OBJECT SELECT ==========
+    function selectObject(el, type) {
+      document.querySelectorAll('.object-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      const info = {
+        sunflower: 'Sunflower seed heads often follow Fibonacci spirals (approx. 34 and 55 spirals).',
+        butterfly: 'Butterflies exhibit bilateral symmetry — left and right wings are mirror images.',
+        pinecone: 'Pinecone scales typically form Fibonacci spirals (8 and 13 are common).',
+        flower: 'Many flowers show radial symmetry and petal counts that are Fibonacci numbers (3, 5, 8, 13…).'
+      };
+      document.getElementById('object-info').textContent = info[type] || '';
+    }
+
+    // ========== QUIZ ==========
+    const quizData = [
+      {q: "1. Which of the following is an irrational number?", opts: ["A) 0.75", "B) 22/7", "C) √2", "D) −4"], ans: 2},
+      {q: "2. An arithmetic sequence has first term a₁ = 7 and common difference d = −3. What is the 5th term?", opts: ["A) −5", "B) −2", "C) 1", "D) 4"], ans: 0},
+      {q: "3. The sequence 2, 6, 18, 54, … is:", opts: ["A) Arithmetic", "B) Geometric", "C) Harmonic", "D) Fibonacci"], ans: 1},
+      {q: "4. What is the common ratio of the geometric sequence 81, 27, 9, 3, …?", opts: ["A) 3", "B) 1/3", "C) −3", "D) 9"], ans: 1},
+      {q: "5. The next two terms of the Fibonacci-like sequence 2, 2, 4, 6, 10, … are:", opts: ["A) 14, 20", "B) 16, 26", "C) 12, 18", "D) 15, 25"], ans: 1},
+      {q: "6. Which sequence is harmonic?", opts: ["A) 1, 2, 3, 4", "B) 1, 1/2, 1/3, 1/4", "C) 2, 4, 8, 16", "D) 1, 1, 2, 3"], ans: 1},
+      {q: "7. The general term of an arithmetic sequence is aₙ = a₁ + (n−1)d. If a₁ = 10 and d = 4, a₈ = ?", opts: ["A) 34", "B) 38", "C) 42", "D) 46"], ans: 1},
+      {q: "8. In a geometric sequence, if a₁ = 5 and r = 2, what is a₆?", opts: ["A) 80", "B) 160", "C) 320", "D) 64"], ans: 1},
+      {q: "9. Bilateral symmetry is best illustrated by which natural object?", opts: ["A) Sunflower seed head", "B) Butterfly wings", "C) Tree branching", "D) Spiral shell"], ans: 1},
+      {q: "10. The sequence 1/2, 1/5, 1/8, 1/11, … is harmonic because the denominators form an:", opts: ["A) Geometric sequence", "B) Arithmetic sequence", "C) Fibonacci sequence", "D) Harmonic sequence"], ans: 1},
+      {q: "11. What is the 7th Fibonacci number (starting 1, 1, 2, 3, 5, …)?", opts: ["A) 8", "B) 13", "C) 21", "D) 34"], ans: 1},
+      {q: "12. A plant’s leaf count follows 1, 1, 2, 3, 5, 8, x. The value of x is:", opts: ["A) 11", "B) 12", "C) 13", "D) 15"], ans: 2},
+      {q: "13. Which statement is TRUE?", opts: ["A) Every geometric sequence is also arithmetic", "B) The Fibonacci sequence is a special case of arithmetic sequence", "C) Harmonic sequences are reciprocals of arithmetic sequences", "D) All sequences in nature are exactly Fibonacci"], ans: 2},
+      {q: "14. Find the common difference of: −4, 1, 6, 11, 16", opts: ["A) 4", "B) 5", "C) −5", "D) 3"], ans: 1},
+      {q: "15. If the 3rd term of a geometric sequence is 12 and the common ratio is 2, the first term is:", opts: ["A) 3", "B) 6", "C) 24", "D) 48"], ans: 0},
+      {q: "16. The golden ratio φ is closely related to which sequence?", opts: ["A) Arithmetic", "B) Geometric", "C) Harmonic", "D) Fibonacci"], ans: 3},
+      {q: "17. In engineering, geometric sequences are frequently used to model:", opts: ["A) Uniform time intervals", "B) Exponential growth or decay", "C) Linear depreciation only", "D) Constant force"], ans: 1},
+      {q: "18. Which of the following is NOT a Fibonacci number?", opts: ["A) 21", "B) 34", "C) 55", "D) 60"], ans: 3},
+      {q: "19. An arithmetic sequence has a₁ = −2 and d = 3. The sum of the first four terms is:", opts: ["A) 10", "B) 8", "C) 6", "D) 4"], ans: 1},
+      {q: "20. The reciprocal of every term of an arithmetic sequence produces a:", opts: ["A) Geometric sequence", "B) Fibonacci sequence", "C) Harmonic sequence", "D) Constant sequence"], ans: 2},
+      {q: "21. A signal attenuates by a factor of 0.8 each stage. This is best modeled by a:", opts: ["A) Arithmetic sequence", "B) Geometric sequence", "C) Harmonic sequence", "D) Fibonacci sequence"], ans: 1},
+      {q: "22. The sequence 8, 8, 16, 24, 40, … most closely resembles:", opts: ["A) Arithmetic", "B) Geometric", "C) Fibonacci-type", "D) Harmonic"], ans: 2},
+      {q: "23. Radial symmetry is typical of:", opts: ["A) Human body", "B) Butterfly", "C) Many flowers and starfish", "D) Tree trunks"], ans: 2},
+      {q: "24. If aₙ = 3n − 1, the sequence is:", opts: ["A) Geometric with r = 3", "B) Arithmetic with d = 3", "C) Harmonic", "D) Fibonacci"], ans: 1},
+      {q: "25. The next term after 1/4, 1/7, 1/10, 1/13 is:", opts: ["A) 1/15", "B) 1/16", "C) 1/17", "D) 1/19"], ans: 1},
+      {q: "26. In a geometric sequence, the product of the means equals the product of the extremes. This property helps verify:", opts: ["A) Common difference", "B) Common ratio", "C) Recursive sum", "D) Harmonic mean"], ans: 1},
+      {q: "27. Phyllotaxis (leaf arrangement) is often modeled using:", opts: ["A) Only arithmetic sequences", "B) Fibonacci numbers and the golden angle", "C) Purely harmonic sequences", "D) Random distributions only"], ans: 1},
+      {q: "28. The 4th term of the harmonic sequence corresponding to 2, 5, 8, 11 is:", opts: ["A) 1/11", "B) 1/14", "C) 1/8", "D) 1/5"], ans: 0},
+      {q: "29. Which formula correctly gives the nth Fibonacci number using the recursive definition?", opts: ["A) Fₙ = Fₙ₋₁ + n", "B) Fₙ = Fₙ₋₁ × Fₙ₋₂", "C) Fₙ = Fₙ₋₁ + Fₙ₋₂", "D) Fₙ = 2Fₙ₋₁"], ans: 2},
+      {q: "30. A student reports a final result of 24 correct answers out of 30. The percentage score is:", opts: ["A) 75%", "B) 80%", "C) 85%", "D) 90%"], ans: 1}
+    ];
+
+    function buildQuiz() {
+      const container = document.getElementById('quiz-container');
+      if (container.dataset.built) return;
+      container.dataset.built = 'true';
+      let html = '';
+      quizData.forEach((item, i) => {
+        html += `
+          <div class="challenge-box" style="margin-bottom:1.5rem;">
+            <div class="label">Item ${i+1} of 30</div>
+            <p style="font-weight:600; color:var(--text-dark);">${item.q}</p>
+            <div class="options" id="quiz-opts-${i}">
+              ${item.opts.map((o, j) => `
+                <button class="option-btn" onclick="selectQuizAnswer(${i}, ${j}, this)">${o}</button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function selectQuizAnswer(qIndex, optIndex, btn) {
+      const options = document.getElementById('quiz-opts-' + qIndex);
+      options.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      quizAnswers[qIndex] = optIndex;
+    }
+
+    function submitQuiz() {
+      let quizScore = 0;
+      quizData.forEach((item, i) => {
+        if (quizAnswers[i] === item.ans) quizScore++;
+      });
+      // Add the quiz score to the earlier interactive points
+      // Earlier max interactive points ≈ 8 (3 QC + 5 challenges)
+      // We treat the 30-item quiz as the main assessment (out of 30)
+      // So final displayed score is the quiz score only, as requested: __/30
+      totalScore = quizScore; // override to pure quiz result for official score
+      document.getElementById('finalScoreDisplay').textContent = quizScore + '/30';
+      const pct = ((quizScore / 30) * 100).toFixed(2);
+      document.getElementById('finalPercent').textContent = pct + '%';
+      updateResultString();
+      goTo(12);
+    }
+
+    function updateResultString() {
+      const name = document.getElementById('studentName').value.trim() || 'Student Name';
+      const scoreText = document.getElementById('finalScoreDisplay').textContent;
+      const pct = document.getElementById('finalPercent').textContent;
+      document.getElementById('resultString').textContent = `${name} — ${scoreText} (${pct})`;
+    }
+
+    // Initialize
+    updateProgress();
+  </script>
+</body>
+</html>
