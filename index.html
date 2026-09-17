@@ -922,8 +922,8 @@
           </button>
         </div>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-top:1rem;">
-          Your name and score will be sent directly to the instructor’s Google Sheet.<br>
-          A confirmation page will appear — you can close it after.
+          This will open a Google Form with your name and score already filled in.<br>
+          Just click <strong>Submit</strong> on the form.
         </p>
 
         <div class="btn-group" style="justify-content:center; margin-top:1.5rem;">
@@ -1211,12 +1211,12 @@
       const pct = document.getElementById('finalPercent').textContent;
       const scoreValue = `${scoreText} (${pct})`;
 
-      // Send directly to Google Apps Script → Google Sheet
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbzgq6Y6hCo3yhvHyEWWoYLsIRdyUXIWiZagHRe8jJdwYb2rwLIOjEDZAH6GohR0SN4r/exec'
-        + '?name=' + encodeURIComponent(name)
-        + '&score=' + encodeURIComponent(scoreValue);
+      // Pre-filled Google Form URL
+      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSceIjL46n7Msai7kUNP1l2w3y6jGhhbZq9blaYY-sBJpXQjPQ/viewform?usp=pp_url'
+        + '&entry.1657552582=' + encodeURIComponent(name)
+        + '&entry.1988871160=' + encodeURIComponent(scoreValue);
 
-      window.open(scriptUrl, '_blank');
+      window.open(formUrl, '_blank');
     }
 
     // Initialize
