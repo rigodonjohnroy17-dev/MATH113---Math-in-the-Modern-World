@@ -69,10 +69,17 @@
       margin-top: 2px;
     }
 
-    .header-text .prepared {
-      font-size: 0.78rem;
-      color: var(--accent-yellow);
-      margin-top: 4px;
+    /* Footer */
+    .app-footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      margin-top: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    .app-footer strong {
+      color: var(--primary-blue);
     }
 
     /* Main container */
@@ -468,7 +475,6 @@
     <div class="header-text">
       <h1>Nature Pattern Explorer</h1>
       <p>Mathematics in Nature • MATH113</p>
-      <p class="prepared">Prepared by John Roy Rigodon — MATH113 Instructor</p>
     </div>
   </header>
 
@@ -873,8 +879,8 @@
     <div class="screen" id="screen-12">
       <div class="card final-score-box">
         <h2>🏆 Assessment Complete</h2>
-        <p>Enter your full name for the official record:</p>
-        <input type="text" class="answer-input" id="studentName" placeholder="e.g. Maria Santos" style="max-width:320px; text-align:center;">
+        <p>Enter your full name (Last Name, First Name M.I.):</p>
+        <input type="text" class="answer-input" id="studentName" placeholder="e.g. Santos, Maria A." style="max-width:340px; text-align:center;" oninput="updateResultString()">
         
         <div class="big-score" id="finalScoreDisplay">0/30</div>
         <div class="percentage" id="finalPercent">0%</div>
@@ -882,16 +888,29 @@
         <div class="result-format" id="resultString">
           — /30 (—%)
         </div>
-        <p style="font-size:0.9rem; color:var(--text-muted);">Copy the line above and submit it to your instructor.</p>
 
-        <div class="btn-group" style="justify-content:center;">
-          <button class="btn btn-yellow" onclick="updateResultString()">Update Name on Result</button>
-          <button class="btn btn-primary" onclick="location.reload()">Restart Module</button>
+        <div class="btn-group" style="justify-content:center; margin-top:1.5rem;">
+          <button class="btn btn-yellow" onclick="submitToGoogleForm()" style="font-size:1.1rem; padding:0.85rem 1.8rem;">
+            📤 Submit Score to Instructor
+          </button>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:1rem;">
+          This will open a Google Form with your name and score already filled in.<br>
+          Just click <strong>Submit</strong> on the form.
+        </p>
+
+        <div class="btn-group" style="justify-content:center; margin-top:1.5rem;">
+          <button class="btn btn-outline" onclick="location.reload()">Restart Module</button>
         </div>
       </div>
     </div>
 
   </div><!-- end container -->
+
+  <footer class="app-footer">
+    <strong>Mathematics in Nature</strong> • MATH113<br>
+    Prepared by <strong>John Roy Rigodon</strong> — MATH113 Instructor
+  </footer>
 
   <script>
     // ========== STATE ==========
@@ -1152,6 +1171,25 @@
       const scoreText = document.getElementById('finalScoreDisplay').textContent;
       const pct = document.getElementById('finalPercent').textContent;
       document.getElementById('resultString').textContent = `${name} — ${scoreText} (${pct})`;
+    }
+
+    function submitToGoogleForm() {
+      const name = document.getElementById('studentName').value.trim();
+      if (!name) {
+        alert('Please enter your full name first.');
+        document.getElementById('studentName').focus();
+        return;
+      }
+      const scoreText = document.getElementById('finalScoreDisplay').textContent;
+      const pct = document.getElementById('finalPercent').textContent;
+      const scoreValue = `${scoreText} (${pct})`;
+
+      // Pre-filled Google Form URL
+      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSceIjL46n7Msai7kUNP1l2w3y6jGhhbZq9blaYY-sBJpXQjPQ/viewform?usp=pp_url'
+        + '&entry.1657552582=' + encodeURIComponent(name)
+        + '&entry.1988871160=' + encodeURIComponent(scoreValue);
+
+      window.open(formUrl, '_blank');
     }
 
     // Initialize
